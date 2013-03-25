@@ -32,7 +32,7 @@ module BackupOnTheGo #:nodoc:#
   # * <tt>:bitbucket_user</tt> - *Required* string if <tt>:user</tt> is not specified - The user name on BitBucket. If not specified, <tt>:user</tt> will be used.
   # * <tt>:git_cmd</tt> - Optional string - The git command you want to use. Default is 'git'.
   # * <tt>:github_repos_owner</tt> - Optional string - The owner of the repositories that need to be backed up. The owner could be an organization. If not specified, <tt>:github_user</tt> will be used.
-  # * <tt>:github_user</tt> - *Required* strinbackupg if <tt>:user</tt> is not specified - The user name on GitHub. If not specified, <tt>:user</tt> will be used.
+  # * <tt>:github_user</tt> - *Required* string if <tt>:user</tt> is not specified - The user name on GitHub. If not specified, <tt>:user</tt> will be used.
   # * <tt>:is_private</tt> - Optional boolean - <tt>true</tt> to make the backup repositories private, <tt>false</tt> to make them public. Default is <tt>true</tt>.
   # * <tt>:no_public_fork</tt> - Optional boolean - <tt>true</tt> to forbid public fork for the backup repositories, <tt>false</tt> to allow public fork. Default is <tt>true</tt>.
   # * <tt>:repo_prefix</tt> - Optional string - The prefix you wanna prepend to the backup repository names. In this way, if you have a repository with the same name on BitBucket, it won't get flushed. Default is <tt>"backup-on-the-go-"</tt>.
