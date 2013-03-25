@@ -4,7 +4,11 @@ require 'backup_on_the_go'
 config = {
   :github_user => 'your_user_name_on_github',   # your github user name
   :bitbucket_user => 'your_user_name_on_bitbucket', # your bitbucket user name
-  :bitbucket_password => 'your_bitbucket_password', # your bitbucket password. Sorry I don't know there is a way to avoid this yet.
+
+  # your bitbucket password. Sorry I don't know there is a way to avoid this
+  # yet. But Heroku repositories are private, so you probably don't need to
+  # worry about this.
+  :bitbucket_password => 'your_bitbucket_password',
 
   # uncomment the following line to make your backup repositories public
 # :is_private => false,
