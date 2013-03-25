@@ -17,6 +17,11 @@ Back up your organization repositories:
 
     backup-on-the-go user:your_user_name github_repos_owner:organization_name bitbucket_repos_owner:team_name
 
+For more options, see the parameters of [BackupOnTheGo.backup][1].
+
+
 ## Run in the Cloud
 
 **TODO**
+
+[1]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/BackupOnTheGo.backup
