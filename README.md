@@ -1,8 +1,12 @@
 # Backup On The Go
 
-[RubyGems][1]|[RDocs][2]
+[RubyGems][1] | [RDocs][2]
 
 Back up your GitHub repositories to BitBucket.
+
+## Install
+
+    gem install backup_on_the_go
 
 ## Run locally
 
