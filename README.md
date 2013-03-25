@@ -30,7 +30,40 @@ For more options, see the parameters of [BackupOnTheGo.backup][3].
 
 ## Run in the Cloud
 
-**TODO**
+You can deploy to some cloud services to run the backup timely.
+
+### Deploy to Heroku
+
+If you are new to [Heroku](http://heroku.com), first go to Heroku website to
+[create an account][heroku_signup], install [Heroku Toolbelt][], and run
+`heroku login` to login.
+
+Run the following command to obtain the pre-prepared files for deploying:
+
+    git clone -b heroku git://github.com/xuhdev/backup-on-the-go.git
+    cd backup-on-the-go
+    bundle
+    heroku create
+
+Then edit `backup.rb` to configure your backup. After configuring, you may
+wanna run `foreman start` to test locally. Then:
+
+    git commit -a -m "My initial backup commit."
+    git push heroku master
+
+**NOTE**: Don't push to any public repositories, since your password is there!
+
+At last, you need to [scale your dyno formation][] in order to run the backup
+dyno instead of the web dyno:
+
+    heroku scale web=0 worker=1
+
+Done!
+
+
 [1]: https://rubygems.org/gems/backup_on_the_go
 [2]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/frames
 [3]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/BackupOnTheGo.backup
+[heroku_signup]: https://id.heroku.com/signup
+[Heroku Toolbelt]: https://toolbelt.heroku.com/
+[scale your dyno formation]: https://devcenter.heroku.com/articles/scaling
