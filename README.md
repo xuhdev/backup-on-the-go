@@ -1,6 +1,6 @@
 # Backup On The Go
 
-[RDocs][1]
+[RubyGems][1]|[RDocs][2]
 
 Back up your GitHub repositories to BitBucket.
 
@@ -21,12 +21,12 @@ Back up your organization repositories:
 
     backup-on-the-go user:your_user_name github_repos_owner:organization_name bitbucket_repos_owner:team_name
 
-For more options, see the parameters of [BackupOnTheGo.backup][2].
+For more options, see the parameters of [BackupOnTheGo.backup][3].
 
 
 ## Run in the Cloud
 
 **TODO**
-
-[1]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/frames
-[2]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/BackupOnTheGo.backup
+[1]: https://rubygems.org/gems/backup_on_the_go
+[2]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/frames
+[3]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/BackupOnTheGo.backup
