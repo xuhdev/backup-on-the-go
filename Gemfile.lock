@@ -9,7 +9,7 @@ GEM
       nokogiri (~> 1.5.2)
       simple_oauth
     colorize (0.5.8)
-    faraday (0.8.6)
+    faraday (0.8.7)
       multipart-post (~> 1.1)
     faraday_middleware (0.8.8)
       faraday (>= 0.7.4, < 0.9)
