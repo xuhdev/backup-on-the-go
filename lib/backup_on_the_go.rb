@@ -6,6 +6,13 @@ require 'colorize'
 
 # The module of BackupOnTheGo
 module BackupOnTheGo #:nodoc:#
+  module Version
+    MAJOR = 0
+    MINOR = 1
+    TINY  = 0
+  end
+
+  VERSION = [Version::MAJOR, Version::MINOR, Version::TINY].compact.join('.')
 
   DEFAULT_CONFIG = {
     :backup_fork => false,
