@@ -1,11 +1,22 @@
 #!/usr/bin/env ruby
 
-# backup-on-the-go key0:string_value0 key1:string_value1 key2?boolean_value2 ...
-#
-# typically:
-# backup-on-the-go user:username is_prviate?false
-
 require 'backup_on_the_go'
+
+if ARGV.length == 0
+  puts <<END
+  Usage:
+
+  backup-on-the-go key0:string_value0 key1:string_value1 key2?boolean_value2 ...
+
+  e.g.
+  backup-on-the-go user:username is_prviate?false
+
+  For the description of keys and values, please see the document of
+  BackupOnTheGo.backup
+
+END
+  exit
+end
 
 config = Hash.new
 
