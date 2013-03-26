@@ -162,9 +162,9 @@ module BackupOnTheGo #:nodoc:#
 
         cmd = "cd #{dir}/tmp-repo && "
         if main_branch != nil # push bitbucket #{main_branch} first before push --mirror
-          cmd += "#{config[:git_cmd]} push bitbucket #{main_branch} --force && "
+          cmd += "#{config[:git_cmd]} push bitbucket #{main_branch} && "
         end
-        cmd += "#{config[:git_cmd]} push --mirror --force bitbucket"
+        cmd += "#{config[:git_cmd]} push --mirror bitbucket"
         puts "Executing #{cmd}" if config[:verbose]
         `#{cmd}`
         unless $?.exitstatus
