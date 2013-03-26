@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.description   = 'Backup GitHub repositories to BitBucket'
   s.files         = Dir['{bin,lib}/**/*', 'LICENSE', 'README*']
   s.executables << 'backup-on-the-go'
+  s.license       = 'BSD'
 
   s.add_dependency 'github_api', '~> 0.8.11'
   s.add_dependency 'highline', '~> 1.6.16'
