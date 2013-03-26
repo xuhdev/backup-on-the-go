@@ -49,7 +49,7 @@ Then edit `backup.rb` to configure your backup. After configuring, you may
 wanna run `foreman start` to test locally. Then:
 
     git commit -a -m "My initial backup commit."
-    git push heroku master
+    git push heroku heroku:master
 
 **NOTE**: Don't push to any public repositories, since your password is there!
 
