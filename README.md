@@ -2,13 +2,13 @@
 
 [RubyGems][1] | [RDocs][2]
 
-Back up your GitHub repositories to BitBucket.
+Back up (or mirror) your GitHub repositories to BitBucket.
 
 ## Install
 
     gem install backup_on_the_go
 
-## Run locally
+## Run Locally
 
 Shortcut:
 
