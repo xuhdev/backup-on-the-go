@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'github_api'
 require 'bitbucket_rest_api'
 require 'highline/import'

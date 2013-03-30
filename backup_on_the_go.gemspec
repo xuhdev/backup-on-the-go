@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 $:.push File.expand_path('../lib', __FILE__)
 require File.expand_path('../lib/backup_on_the_go/version', __FILE__)
 
