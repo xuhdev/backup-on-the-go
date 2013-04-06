@@ -12,6 +12,7 @@ module BackupOnTheGo #:nodoc:#
   DEFAULT_CONFIG = {
     :backup_fork => false,
     :git_cmd => 'git',
+    :github_repos_max => '200',
     :is_private => true,
     :no_public_forks => true,
     :repo_prefix => 'backup-on-the-go-',
@@ -26,6 +27,7 @@ module BackupOnTheGo #:nodoc:#
   # * <tt>:bitbucket_repos_owner</tt> - Optional string - Owner of the backup repositories on BitBucket. The owner could be a team. If not specified, <tt>:bitbucket_user</tt> will be used.
   # * <tt>:bitbucket_user</tt> - *Required* string if <tt>:user</tt> is not specified - The user name on BitBucket. If not specified, <tt>:user</tt> will be used.
   # * <tt>:git_cmd</tt> - Optional string - The git command you want to use. Default is 'git'.
+  # * <tt>:github_repos_max</tt> - Optional string - The max number of your GitHub repos, since GitHub API requires to give a repo number upper limit. Usually you don't need to set up this number unless you have more than 200 repositories. Default is <tt>"200"</tt>.
   # * <tt>:github_repos_owner</tt> - Optional string - The owner of the repositories that need to be backed up. The owner could be an organization. If not specified, <tt>:github_user</tt> will be used.
   # * <tt>:github_user</tt> - *Required* string if <tt>:user</tt> is not specified - The user name on GitHub. If not specified, <tt>:user</tt> will be used.
   # * <tt>:is_private</tt> - Optional boolean - <tt>true</tt> to make the backup repositories private, <tt>false</tt> to make them public. Default is <tt>true</tt>.
@@ -80,9 +82,6 @@ module BackupOnTheGo #:nodoc:#
       config[:bitbucket_password] = ask("Enter your BitBucket password: ") { |q| q.echo = false }
     end
 
-
-    gh_repos = Github.repos.list :user => config[:github_repos_owner] # obtain github repos
-
     bb = BitBucket.new :login => config[:bitbucket_user], :password => config[:bitbucket_password]
 
     backup_repo_names = Array.new
@@ -92,6 +91,10 @@ module BackupOnTheGo #:nodoc:#
         backup_repo_names.push(repo.slug)
       end
     end
+
+    # obtain github repos
+    gh_repos = Github.repos.list :user => config[:github_repos_owner],
+      :per_page => config[:github_repos_max]
 
     gh_repos.each do |repo|
       next if repo.fork && !config[:backup_fork]
