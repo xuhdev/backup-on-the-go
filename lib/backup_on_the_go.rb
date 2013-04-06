@@ -117,7 +117,8 @@ module BackupOnTheGo #:nodoc:#
         bb.repos.edit config[:bitbucket_repos_owner], backup_repo_name,
           :website => repo.homepage,
           :description => repo.description,
-          :is_private => config[:is_private]
+          :is_private => config[:is_private],
+          :no_public_forks => config[:no_public_forks]
       rescue
         puts_warning "Failed to update information for #{config[:bitbucket_repos_owner]}/#{backup_repo_name}"
       end
