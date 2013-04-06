@@ -13,7 +13,7 @@ module BackupOnTheGo #:nodoc:#
     :backup_fork => false,
     :git_cmd => 'git',
     :is_private => true,
-    :no_public_fork => true,
+    :no_public_forks => true,
     :repo_prefix => 'backup-on-the-go-',
     :verbose => true
   }.freeze
@@ -29,7 +29,7 @@ module BackupOnTheGo #:nodoc:#
   # * <tt>:github_repos_owner</tt> - Optional string - The owner of the repositories that need to be backed up. The owner could be an organization. If not specified, <tt>:github_user</tt> will be used.
   # * <tt>:github_user</tt> - *Required* string if <tt>:user</tt> is not specified - The user name on GitHub. If not specified, <tt>:user</tt> will be used.
   # * <tt>:is_private</tt> - Optional boolean - <tt>true</tt> to make the backup repositories private, <tt>false</tt> to make them public. Default is <tt>true</tt>.
-  # * <tt>:no_public_fork</tt> - Optional boolean - <tt>true</tt> to forbid public fork for the backup repositories, <tt>false</tt> to allow public fork. Default is <tt>true</tt>.
+  # * <tt>:no_public_forks</tt> - Optional boolean - <tt>true</tt> to forbid public fork for the backup repositories, <tt>false</tt> to allow public fork. Default is <tt>true</tt>.
   # * <tt>:repo_prefix</tt> - Optional string - The prefix you wanna prepend to the backup repository names. In this way, if you have a repository with the same name on BitBucket, it won't get flushed. Default is <tt>"backup-on-the-go-"</tt>.
   # * <tt>:user</tt> - *Required* string if <tt>:github_user</tt> and <tt>:bitbucket_user</tt> are not both specified - The user name of GitHub and BitBucket (if they are same for you). If you want to use different user names on GitHub and BitBucket, please specify <tt>:github_user</tt> and <tt>:bitbucket_user</tt> instead.
   # * <tt>:verbose</tt> - Optional boolean - <tt>true</tt> to print additional information and <tt>false</tt> to suppress them. Default is <tt>true</tt>.
@@ -105,7 +105,7 @@ module BackupOnTheGo #:nodoc:#
         puts "Creating new repository #{config[:bitbucket_repos_owner]}/#{backup_repo_name}..." if config[:verbose]
         begin
           bb.repos.create :name => backup_repo_name, :owner => config[:bitbucket_repos_owner],
-            :scm => 'git', :is_private => config[:is_private], :no_public_fork => config[:no_public_fork]
+            :scm => 'git', :is_private => config[:is_private], :no_public_forks => config[:no_public_forks]
         rescue
           puts_warning "Creation of repository #{config[:bitbucket_repos_owner]}/#{backup_repo_name} failed."
         end
