@@ -60,11 +60,23 @@ dyno instead of the web dyno:
 
 Done!
 
+
+## Real World Example
+
+For a real world example, you can check [my backup BitBucket Account][]. For
+another example of backing up organizations, see EditorConfig on [GitHub][4]
+and [BitBucket][5].
+
+
+
 [![githalytics.com alpha](https://cruel-carlota.pagodabox.com/6f3b3972996375aafd08f51e6ed619cc "githalytics.com")](http://githalytics.com/xuhdev/backup-on-the-go)
 
 [1]: https://rubygems.org/gems/backup_on_the_go
 [2]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/frames
 [3]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/BackupOnTheGo.backup
-[heroku_signup]: https://id.heroku.com/signup
+[4]: https://github.com/editorconfig
+[5]: https://bitbucket.org/editorconfig
 [Heroku Toolbelt]: https://toolbelt.heroku.com/
+[My backup BitBucket Account]: https://bitbucket.org/xuhdev-backup
+[heroku_signup]: https://id.heroku.com/signup
 [scale your dyno formation]: https://devcenter.heroku.com/articles/scaling
