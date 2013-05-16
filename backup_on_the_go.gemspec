@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.license       = 'BSD'
 
   s.add_dependency 'github_api', '~> 0.8.11'
-  s.add_dependency 'highline', '~> 1.6.16'
+  s.add_dependency 'highline', '~> 1.6.19'
   s.add_dependency 'bitbucket_rest_api', '~> 0.1.2'
   s.add_dependency 'colorize', '~> 0.5.8'
 end

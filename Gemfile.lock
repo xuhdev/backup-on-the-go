@@ -1,3 +1,12 @@
+PATH
+  remote: .
+  specs:
+    backup_on_the_go (0.1.5)
+      bitbucket_rest_api (~> 0.1.2)
+      colorize (~> 0.5.8)
+      github_api (~> 0.8.11)
+      highline (~> 1.6.19)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -20,11 +29,11 @@ GEM
       nokogiri (~> 1.5.2)
       oauth2
     hashie (1.2.0)
-    highline (1.6.16)
+    highline (1.6.19)
     httpauth (0.2.0)
     jwt (0.1.8)
       multi_json (>= 1.5)
-    multi_json (1.7.2)
+    multi_json (1.7.3)
     multi_xml (0.5.3)
     multipart-post (1.2.0)
     nokogiri (1.5.9)
@@ -42,7 +51,4 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bitbucket_rest_api (~> 0.1.2)
-  colorize (~> 0.5.8)
-  github_api (~> 0.8.11)
-  highline (~> 1.6.16)
+  backup_on_the_go!
