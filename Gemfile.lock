@@ -4,12 +4,13 @@ PATH
     backup_on_the_go (0.1.5)
       bitbucket_rest_api (~> 0.1.2)
       colorize (~> 0.5.8)
-      github_api (~> 0.8.11)
+      github_api (~> 0.10.0)
       highline (~> 1.6.19)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.3.4)
     bitbucket_rest_api (0.1.2)
       faraday (~> 0.8.1)
       faraday_middleware (~> 0.8.1)
@@ -22,9 +23,10 @@ GEM
       multipart-post (~> 1.1)
     faraday_middleware (0.8.8)
       faraday (>= 0.7.4, < 0.9)
-    github_api (0.8.11)
+    github_api (0.10.0)
+      addressable
       faraday (~> 0.8.1)
-      hashie (~> 1.2.0)
+      hashie (>= 1.2)
       multi_json (~> 1.4)
       nokogiri (~> 1.5.2)
       oauth2
