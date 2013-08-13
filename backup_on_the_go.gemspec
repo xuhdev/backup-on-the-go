@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.executables << 'backup-on-the-go'
   s.license       = 'BSD'
 
-  s.add_dependency 'github_api', '~> 0.10.0'
+  s.add_dependency 'github_api', '= 0.10.1'
   s.add_dependency 'highline', '~> 1.6.19'
   s.add_dependency 'bitbucket_rest_api', '~> 0.1.2'
   s.add_dependency 'colorize', '~> 0.5.8'
