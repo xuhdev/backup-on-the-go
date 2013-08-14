@@ -211,11 +211,11 @@ module BackupOnTheGo #:nodoc:#
     if config[:backup_private]
       puts "Backing up private repositories...\n".green
 
-      gh_repos = gh.repos.list :per_page => config[:github_repos_max], :type => 'private'
+      gh_repos = gh.repos.list :per_page => config[:github_repos_max]
 
       gh_repos.each do |repo|
-        # only back up those with the owner specified
-        if repo.owner.login == config[:github_repos_owner]
+        # only back up private repositories with the owner specified
+        if repo.owner.login == config[:github_repos_owner] and repo.private?
           repo_each_proc.call(repo)
         end
       end
