@@ -11,6 +11,7 @@ module BackupOnTheGo #:nodoc:#
 
   DEFAULT_CONFIG = {
     :backup_fork => false,
+    :backup_private => false,
     :git_cmd => 'git',
     :github_repos_max => '200',
     :is_private => true,
@@ -19,18 +20,21 @@ module BackupOnTheGo #:nodoc:#
     :verbose => true
   }.freeze
 
-  # Backup GitHub repositories to BitBucket.
+
+  # Back up GitHub repositories to BitBucket.
   #
   # = Parameters
-  # * <tt>:backup_fork</tt> - Optional boolean - <tt>true</tt> to backup forked repositories, <tt>false</tt> to skip them. Default is <tt>false</tt>.
+  # * <tt>:backup_fork</tt> - Optional boolean - <tt>true</tt> to back up forked repositories, <tt>false</tt> to skip them. Default is <tt>false</tt>.
+  # * <tt>:backup_private</tt> - Optional boolean - <tt>true</tt> to back up private repositories, <tt>false</tt> to NOT back up private repositories. Default is <tt>false</tt>.
   # * <tt>:bitbucket_password</tt> - Optional string - The password to access the BitBucket account. If not specified, a prompt will show up to ask for the password.
   # * <tt>:bitbucket_repos_owner</tt> - Optional string - Owner of the backup repositories on BitBucket. The owner could be a team. If not specified, <tt>:bitbucket_user</tt> will be used.
   # * <tt>:bitbucket_user</tt> - *Required* string if <tt>:user</tt> is not specified - The user name on BitBucket. If not specified, <tt>:user</tt> will be used.
   # * <tt>:git_cmd</tt> - Optional string - The git command you want to use. Default is 'git'.
+  # * <tt>:github_password</tt> - Optional string - When backup_private is set to true, this is the password used to access the GitHub account. If not specified, a prompt will show up to ask for the password.
   # * <tt>:github_repos_max</tt> - Optional string - The max number of your GitHub repos, since GitHub API requires to give a repo number upper limit. Usually you don't need to set up this number unless you have more than 200 repositories. Default is <tt>"200"</tt>.
   # * <tt>:github_repos_owner</tt> - Optional string - The owner of the repositories that need to be backed up. The owner could be an organization. If not specified, <tt>:github_user</tt> will be used.
   # * <tt>:github_user</tt> - *Required* string if <tt>:user</tt> is not specified - The user name on GitHub. If not specified, <tt>:user</tt> will be used.
-  # * <tt>:is_private</tt> - Optional boolean - <tt>true</tt> to make the backup repositories private, <tt>false</tt> to make them public. Default is <tt>true</tt>.
+  # * <tt>:is_private</tt> - Optional boolean - <tt>true</tt> to make the backup repositories private even if the corresponding github repositories are public; <tt>false</tt> to keep the original privacy. Default is <tt>true</tt>.
   # * <tt>:no_public_forks</tt> - Optional boolean - <tt>true</tt> to forbid public fork for the backup repositories, <tt>false</tt> to allow public fork. Default is <tt>true</tt>.
   # * <tt>:repo_prefix</tt> - Optional string - The prefix you wanna prepend to the backup repository names. In this way, if you have a repository with the same name on BitBucket, it won't get flushed. Default is <tt>"backup-on-the-go-"</tt>.
   # * <tt>:user</tt> - *Required* string if <tt>:github_user</tt> and <tt>:bitbucket_user</tt> are not both specified - The user name of GitHub and BitBucket (if they are same for you). If you want to use different user names on GitHub and BitBucket, please specify <tt>:github_user</tt> and <tt>:bitbucket_user</tt> instead.
@@ -38,10 +42,21 @@ module BackupOnTheGo #:nodoc:#
   #
   # = Examples
   #  
-  #  # Back up personal repositories
+  #  # Back up personal public repositories only
   #  BackupOnTheGo.backup :github_user => 'github_user_name',
   #  :bitbucket_user => 'bitbucket_user_name',
   #  :is_private => false,    # make backup repositories public
+  #  :bitbucket_password => 'bitbucket_password',
+  #  :repo_prefix => ''      # don't need any prefix
+  #
+  # = Examples
+  #
+  #  # Back up personal public and private repositories
+  #  BackupOnTheGo.backup :github_user => 'github_user_name',
+  #  :bitbucket_user => 'bitbucket_user_name',
+  #  :backup_private => true,   # back up private repositories
+  #  :is_private => false,    # make backup repositories public
+  #  :github_password => 'github_password',
   #  :bitbucket_password => 'bitbucket_password',
   #  :repo_prefix => ''      # don't need any prefix
   #
@@ -59,6 +74,7 @@ module BackupOnTheGo #:nodoc:#
 
     config = DEFAULT_CONFIG.merge(configs)
 
+    is_private = config[:is_private] || config[:backup_private]
     # either :user or :github_user and :bitbucket_user have to be set
     if config.has_key?(:user)
       config[:github_user] = config[:user] unless config.has_key?(:github_user)
@@ -77,10 +93,18 @@ module BackupOnTheGo #:nodoc:#
       config[:bitbucket_repos_owner] = config[:bitbucket_user]
     end
 
-    # Ask for the password if it is not specified
-    unless config.has_key?(:bitbucket_password)
-      config[:bitbucket_password] = ask("Enter your BitBucket password: ") { |q| q.echo = false }
+    # Ask for the passwords if they are not specified
+    if config[:backup_private] and !config.has_key?(:github_password)
+      config[:github_password] = ask("Enter your GitHub password for #{config[:github_user]}: ") { |q| q.echo = false }
     end
+    unless config.has_key?(:bitbucket_password)
+      config[:bitbucket_password] = ask("Enter your BitBucket password for #{config[:bitbucket_user]}: ") { |q| q.echo = false }
+    end
+
+    # print an empty line
+    puts
+
+    # log in BitBucket
 
     bb = BitBucket.new :login => config[:bitbucket_user], :password => config[:bitbucket_password]
 
@@ -92,11 +116,14 @@ module BackupOnTheGo #:nodoc:#
       end
     end
 
-    # obtain github repos
-    gh_repos = Github.repos.list :user => config[:github_repos_owner],
-      :per_page => config[:github_repos_max]
+    if config[:backup_private]
+      gh = Github.new :login => config[:github_user], :password => config[:github_password]
+    else
+      gh = Github.new
+    end
 
-    gh_repos.each do |repo|
+    # handling each GitHub repo, used below
+    repo_each_proc = Proc.new do |repo|
       next if repo.fork && !config[:backup_fork]
 
       puts "Backing up #{repo.name}..." if config[:verbose]
@@ -108,7 +135,8 @@ module BackupOnTheGo #:nodoc:#
         puts "Creating new repository #{config[:bitbucket_repos_owner]}/#{backup_repo_name}..." if config[:verbose]
         begin
           bb.repos.create :name => backup_repo_name, :owner => config[:bitbucket_repos_owner],
-            :scm => 'git', :is_private => config[:is_private], :no_public_forks => config[:no_public_forks]
+            :scm => 'git', :is_private => is_private,
+            :no_public_forks => config[:no_public_forks]
         rescue
           puts_warning "Creation of repository #{config[:bitbucket_repos_owner]}/#{backup_repo_name} failed."
         end
@@ -120,17 +148,21 @@ module BackupOnTheGo #:nodoc:#
         bb.repos.edit config[:bitbucket_repos_owner], backup_repo_name,
           :website => repo.homepage,
           :description => repo.description,
-          :is_private => config[:is_private],
+          :is_private => is_private,
           :no_public_forks => config[:no_public_forks]
       rescue
         puts_warning "Failed to update information for #{config[:bitbucket_repos_owner]}/#{backup_repo_name}"
       end
 
       Dir.mktmpdir do |dir|
-        cmd = "#{config[:git_cmd]} clone --mirror #{repo.git_url} #{dir}/tmp-repo"
-        puts "Executing #{cmd}" if config[:verbose]
+        # clone git url
+        clone_url = repo.clone_url
+        clone_url.sub!(/https:\/\//,
+                       "https://#{config[:github_user]}:#{config[:github_password]}@") if config[:backup_private]
+        cmd = "#{config[:git_cmd]} clone --mirror '#{clone_url}' #{dir}/tmp-repo"
+        puts "Executing [#{config[:git_cmd]} clone --mirror 'https://#{config[:bitbucket_user]}:your_password@github.com/#{config[:github_repos_owner]}/#{repo.name}.git' #{dir}/tmp-repo]" if config[:verbose]
         unless system(cmd)
-          puts_warning "'git clone' failed for #{repo.git_url}\n"
+          puts_warning "'git clone' failed for #{clone_url}\n"
           break
         end
 
@@ -174,6 +206,34 @@ module BackupOnTheGo #:nodoc:#
         puts
       end
     end
+
+    # obtain github repos
+
+    # private repos
+    puts "Backing up private repositories...\n".green
+
+    if config[:backup_private]
+      gh_repos = gh.repos.list :per_page => config[:github_repos_max]
+
+      gh_repos.each do |repo|
+        # only back up those with the owner specified
+        if repo.owner.login == config[:github_repos_owner]
+          repo_each_proc.call(repo)
+        end
+      end
+    end
+
+    # public repos
+    puts "Backing up public repositories...\n".green
+
+    gh_repos = gh.repos.list :user => config[:github_repos_owner],
+      :per_page => config[:github_repos_max]
+
+    gh_repos.each do |repo|
+      repo_each_proc.call(repo)
+    end
+
+
   end
 
   private
