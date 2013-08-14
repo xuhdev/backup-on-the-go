@@ -116,12 +116,6 @@ module BackupOnTheGo #:nodoc:#
       end
     end
 
-    if config[:backup_private]
-      gh = Github.new :login => config[:github_user], :password => config[:github_password]
-    else
-      gh = Github.new
-    end
-
     # handling each GitHub repo, used below
     repo_each_proc = Proc.new do |repo|
       next if repo.fork && !config[:backup_fork]
@@ -208,11 +202,16 @@ module BackupOnTheGo #:nodoc:#
     end
 
     # obtain github repos
+    if config[:backup_private]
+      gh = Github.new :login => config[:github_user], :password => config[:github_password]
+    else
+      gh = Github.new
+    end
 
     # private repos
-    puts "Backing up private repositories...\n".green
-
     if config[:backup_private]
+      puts "Backing up private repositories...\n".green
+
       gh_repos = gh.repos.list :per_page => config[:github_repos_max]
 
       gh_repos.each do |repo|
