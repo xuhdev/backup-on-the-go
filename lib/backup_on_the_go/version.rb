@@ -3,8 +3,8 @@
 module BackupOnTheGo #:nodoc:#
   module VERSION
     MAJOR = 0
-    MINOR = 1
-    TINY  = 5
+    MINOR = 2
+    TINY  = 0
 
     STRING = [MAJOR, MINOR, TINY].compact.join('.')
   end
