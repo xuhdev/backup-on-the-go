@@ -74,7 +74,6 @@ module BackupOnTheGo #:nodoc:#
 
     config = DEFAULT_CONFIG.merge(configs)
 
-    is_private = config[:is_private] || config[:backup_private]
     # either :user or :github_user and :bitbucket_user have to be set
     if config.has_key?(:user)
       config[:github_user] = config[:user] unless config.has_key?(:github_user)
@@ -129,7 +128,7 @@ module BackupOnTheGo #:nodoc:#
         puts "Creating new repository #{config[:bitbucket_repos_owner]}/#{backup_repo_name}..." if config[:verbose]
         begin
           bb.repos.create :name => backup_repo_name, :owner => config[:bitbucket_repos_owner],
-            :scm => 'git', :is_private => is_private,
+            :scm => 'git', :is_private => config[:is_private] || repo.private?,
             :no_public_forks => config[:no_public_forks]
         rescue
           puts_warning "Creation of repository #{config[:bitbucket_repos_owner]}/#{backup_repo_name} failed."
@@ -142,7 +141,7 @@ module BackupOnTheGo #:nodoc:#
         bb.repos.edit config[:bitbucket_repos_owner], backup_repo_name,
           :website => repo.homepage,
           :description => repo.description,
-          :is_private => is_private,
+          :is_private => config[:is_private] || repo.private?,
           :no_public_forks => config[:no_public_forks]
       rescue
         puts_warning "Failed to update information for #{config[:bitbucket_repos_owner]}/#{backup_repo_name}"
