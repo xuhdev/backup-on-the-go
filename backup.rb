@@ -8,8 +8,19 @@ config = {
   # your bitbucket password. Sorry I don't know there is a way to avoid this
   # yet. But Heroku repositories are private, so you probably don't need to
   # worry about this. If you really care, you could create an account at
-  # BitBucket for BACKUP ONLY with a simple password
+  # BitBucket for BACKUP ONLY with a different password
   :bitbucket_password => 'your_bitbucket_password',
+
+  # uncomment to also back up private repositories. GitHub password is required
+  # then.
+  #
+  # For security concern (i.e. put your password here), I highly recommend you
+  # to create a GitHub user with a different password for backup purpose only,
+  # and set this user as a collaborator of your private repositories. Then set
+  # :github_repos_owner to your "real" GitHub account user name, and set
+  # :github_user to your GitHub backup account.
+# :backup_private => true,
+# :github_password => 'your_github_password',
 
   # uncomment the following line to make your backup repositories public
 # :is_private => false,
@@ -21,9 +32,9 @@ config = {
   # uncomment the following line if you also want to backup forked repositories
 # :backup_fork => true,
 
-  # uncomment the following line if you want to back up for a GitHub
-  # organization (or other people)
-# :github_repos_owner => 'org_name',
+  # uncomment the following line if you want to back up a GitHub organization
+  # (or other people)
+# :github_repos_owner => 'org_name (or other_user_name)',
 
   # uncomment the following line if you want to back up the repositories to a
   # bitbucket team instead of your own account
