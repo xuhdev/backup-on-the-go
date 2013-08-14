@@ -35,7 +35,7 @@ module BackupOnTheGo #:nodoc:#
   # * <tt>:github_repos_owner</tt> - Optional string - The owner of the repositories that need to be backed up. The owner could be an organization. If not specified, <tt>:github_user</tt> will be used.
   # * <tt>:github_user</tt> - *Required* string if <tt>:user</tt> is not specified - The user name on GitHub. If not specified, <tt>:user</tt> will be used.
   # * <tt>:is_private</tt> - Optional boolean - <tt>true</tt> to make the backup repositories private even if the corresponding github repositories are public; <tt>false</tt> to keep the original privacy. Default is <tt>true</tt>.
-  # * <tt>:no_public_forks</tt> - Optional boolean - <tt>true</tt> to forbid public fork for the backup repositories, <tt>false</tt> to allow public fork. Default is <tt>true</tt>.
+  # * <tt>:no_public_forks</tt> - Optional boolean - <tt>true</tt> to forbid public fork for the backup repositories, <tt>false</tt> to allow public fork. Only valid for public backup repositories. Default is <tt>true</tt>.
   # * <tt>:repo_prefix</tt> - Optional string - The prefix you wanna prepend to the backup repository names. In this way, if you have a repository with the same name on BitBucket, it won't get flushed. Default is <tt>"backup-on-the-go-"</tt>.
   # * <tt>:user</tt> - *Required* string if <tt>:github_user</tt> and <tt>:bitbucket_user</tt> are not both specified - The user name of GitHub and BitBucket (if they are same for you). If you want to use different user names on GitHub and BitBucket, please specify <tt>:github_user</tt> and <tt>:bitbucket_user</tt> instead.
   # * <tt>:verbose</tt> - Optional boolean - <tt>true</tt> to print additional information and <tt>false</tt> to suppress them. Default is <tt>true</tt>.
@@ -119,6 +119,8 @@ module BackupOnTheGo #:nodoc:#
     repo_each_proc = Proc.new do |repo|
       next if repo.fork && !config[:backup_fork]
 
+      is_private = config[:is_private] || repo.private?
+
       puts "Backing up #{repo.name}..." if config[:verbose]
 
       backup_repo_name = "#{config[:repo_prefix]}#{repo.name}"
@@ -128,7 +130,7 @@ module BackupOnTheGo #:nodoc:#
         puts "Creating new repository #{config[:bitbucket_repos_owner]}/#{backup_repo_name}..." if config[:verbose]
         begin
           bb.repos.create :name => backup_repo_name, :owner => config[:bitbucket_repos_owner],
-            :scm => 'git', :is_private => config[:is_private] || repo.private?,
+            :scm => 'git', :is_private => is_private,
             :no_public_forks => config[:no_public_forks]
         rescue
           puts_warning "Creation of repository #{config[:bitbucket_repos_owner]}/#{backup_repo_name} failed."
@@ -141,10 +143,11 @@ module BackupOnTheGo #:nodoc:#
         bb.repos.edit config[:bitbucket_repos_owner], backup_repo_name,
           :website => repo.homepage,
           :description => repo.description,
-          :is_private => config[:is_private] || repo.private?,
-          :no_public_forks => config[:no_public_forks]
-      rescue
+          :is_private => is_private,
+          :no_public_forks => is_private && config[:no_public_forks]
+      rescue Exception => e
         puts_warning "Failed to update information for #{config[:bitbucket_repos_owner]}/#{backup_repo_name}"
+        puts e.message
       end
 
       Dir.mktmpdir do |dir|
