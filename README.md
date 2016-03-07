@@ -69,8 +69,6 @@ and [BitBucket][5].
 
 
 
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/6f3b3972996375aafd08f51e6ed619cc "githalytics.com")](http://githalytics.com/xuhdev/backup-on-the-go)
-
 [1]: https://rubygems.org/gems/backup_on_the_go
 [2]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/frames
 [3]: http://rubydoc.info/github/xuhdev/backup-on-the-go/master/BackupOnTheGo.backup
