@@ -156,7 +156,7 @@ module BackupOnTheGo #:nodoc:#
         clone_url.sub!(/https:\/\//,
                        "https://#{config[:github_user]}:#{config[:github_password]}@") if config[:backup_private]
         cmd = "#{config[:git_cmd]} clone --mirror '#{clone_url}' #{dir}/tmp-repo"
-        puts "Executing [#{config[:git_cmd]} clone --mirror 'https://#{config[:bitbucket_user]}:your_password@github.com/#{config[:github_repos_owner]}/#{repo.name}.git' #{dir}/tmp-repo]" if config[:verbose]
+        puts "Executing [#{config[:git_cmd]} clone --mirror 'https://#{config[:github_user]}:your_password@github.com/#{config[:github_repos_owner]}/#{repo.name}.git' #{dir}/tmp-repo]" if config[:verbose]
         unless system(cmd)
           puts_warning "'git clone' failed for #{clone_url}\n"
           break
